@@ -1,4 +1,4 @@
-"""Punto de entrada de la aplicación"""
+#Punto de entrada de la aplicación
 from src.presentacion.api.app import crear_app
 from src.infraestructura.config import get_config
 

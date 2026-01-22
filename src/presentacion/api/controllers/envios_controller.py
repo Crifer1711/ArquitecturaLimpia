@@ -2,14 +2,14 @@
 from flask import Blueprint, request, jsonify
 from marshmallow import ValidationError
 
-from ...aplicacion.casos_uso import (
+from ....aplicacion.casos_uso import (
     CrearEnvioUseCase,
     ActualizarEstadoEnvioUseCase,
     ObtenerEnvioUseCase,
     ListarEnviosUseCase,
     AsignarTransportistaUseCase
 )
-from ...aplicacion.dto import (
+from ....aplicacion.dto import (
     CrearEnvioDTO,
     ActualizarEstadoEnvioDTO,
     AsignarTransportistaDTO
