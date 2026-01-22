@@ -15,7 +15,6 @@ COPY . .
 
 # Variables de entorno por defecto
 ENV ENVIRONMENT=production
-ENV PORT=5000
 ENV HOST=0.0.0.0
 ENV PYTHONUNBUFFERED=1
 
@@ -23,4 +22,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "wsgi:app", "--preload"]
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 120 wsgi:app --preload
