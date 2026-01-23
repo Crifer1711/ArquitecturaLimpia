@@ -1,120 +1,121 @@
-# 🚚 Microservicio de Gestión de Envíos
+# 📦 Microservicio de Gestión de Envíos
 
-API REST para gestionar envíos de e-commerce con **Arquitectura Limpia** y **DDD**.
+Arquitectura Limpia + DDD - Simple y Efectivo
 
-## 🚀 Despliegue en Render
+## 🏗️ Arquitectura (4 Capas)
 
-### 1. Subir a GitHub
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/Crifer1711/ArquitecturaLimpia.git
-git push -u origin main
+```
+PRESENTACIÓN (API REST)
+        ↓
+APLICACIÓN (Casos de Uso)
+        ↓
+DOMINIO (Lógica de Negocio)
+        ↑
+INFRAESTRUCTURA (Persistencia)
 ```
 
-### 2. Configurar en Render
-1. Ve a [Render.com](https://render.com)
-2. Crea un **Web Service**
-3. Conecta: `https://github.com/Crifer1711/ArquitecturaLimpia.git`
-4. Configura:
-   - **Build**: `pip install -r requirements.txt`
-   - **Start**: `gunicorn --bind 0.0.0.0:$PORT wsgi:app --workers 2`
-5. Variables:
-   ```
-   ENVIRONMENT=production
-   DEBUG=False
-   SECRET_KEY=<genera>
-   ```
-6. Deploy!
+### Estructura del Código
 
-URL: `https://tu-servicio.onrender.com`
+```
+src/
+├── dominio/              # CAPA 1: Lógica de negocio
+│   ├── envio.py         # Agregado Raíz
+│   └── repositorio.py   # Interfaz (Puerto)
+│
+├── aplicacion/          # CAPA 2: Casos de uso
+│   └── casos_uso.py     # 5 casos de uso
+│
+├── infraestructura/     # CAPA 3: Implementaciones
+│   └── repositorio_memoria.py
+│
+└── presentacion/        # CAPA 4: API REST
+    └── api.py           # Endpoints Flask
+```
 
-## 📡 API - Uso en Postman
+## 🚀 Instalación
 
-### Crear Envío
+```bash
+# 1. Crear entorno virtual
+python -m venv venv
+venv\Scripts\activate
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+
+# 3. Ejecutar
+python main.py
+```
+
+## 📡 API Endpoints
+
+### 1. Crear Envío
 ```http
-POST https://tu-servicio.onrender.com/api/envios
+POST http://localhost:5000/envios
 Content-Type: application/json
 
 {
   "pedido_id": "PED-001",
-  "direccion_origen": {
-    "calle": "Av. Principal",
-    "numero": "100",
-    "ciudad": "Madrid",
-    "codigo_postal": "28001",
-    "pais": "España"
-  },
-  "direccion_destino": {
-    "calle": "Calle Secundaria",
-    "numero": "200",
-    "ciudad": "Barcelona",
-    "codigo_postal": "08001",
-    "pais": "España"
-  },
-  "peso_kg": 2.5
+  "origen": "Bogotá, Colombia",
+  "destino": "Medellín, Colombia",
+  "peso": 2.5
 }
 ```
 
-### Obtener por ID
+### 2. Listar Envíos
 ```http
-GET https://tu-servicio.onrender.com/api/envios/{id}
+GET http://localhost:5000/envios
 ```
 
-**Respuesta JSON**:
-```json
+### 3. Obtener Envío
+```http
+GET http://localhost:5000/envios/{id}
+```
+
+### 4. Asignar Transportista
+```http
+PUT http://localhost:5000/envios/{id}/transportista
+Content-Type: application/json
+
 {
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "tracking_number": "ENV-2026012215ab",
-  "pedido_id": "PED-001",
-  "estado": "PENDIENTE",
-  "direccion_origen": "Av. Principal 100, Madrid, 28001, España",
-  "direccion_destino": "Calle Secundaria 200, Barcelona, 08001, España",
-  "peso_kg": 2.5,
-  "eventos": [...]
+  "transportista_id": "TRANS-001"
 }
 ```
 
-### Otros Endpoints
+### 5. Actualizar Estado
+```http
+PUT http://localhost:5000/envios/{id}/estado
+Content-Type: application/json
 
-| Método | URL | Descripción |
-|--------|-----|-------------|
-| GET | `/api/envios` | Listar todos |
-| GET | `/api/envios?estado=EN_TRANSITO` | Filtrar por estado |
-| GET | `/api/envios/tracking/{number}` | Buscar por tracking |
-| PUT | `/api/envios/{id}/estado` | Actualizar estado |
-| PUT | `/api/envios/{id}/transportista` | Asignar transportista |
-
-## 🧪 Flujo en Postman
-
-1. **Crear envío** con POST → obtienes JSON con `id`
-2. **Copiar el `id`** del response
-3. **Obtener envío** con GET usando ese `id`
-4. Ver todos los datos en formato JSON
-
-## 📦 Estados
-
-`PENDIENTE` → `EN_PREPARACION` → `EN_TRANSITO` → `EN_DISTRIBUCION` → `ENTREGADO`
-
-## 🏗️ Arquitectura
-
-```
-src/
-├── dominio/          # Lógica de negocio
-├── aplicacion/       # Casos de uso
-├── infraestructura/  # BD, HTTP, etc.
-└── presentacion/     # API REST
+{
+  "estado": "EN_TRANSITO"
+}
 ```
 
-## 🛠️ Local
+**Estados válidos:** `PENDIENTE`, `EN_PREPARACION`, `EN_TRANSITO`, `ENTREGADO`
 
-```bash
-pip install -r requirements.txt
-python main.py
-# http://localhost:5000
-```
+## 🌐 Deploy en Render
 
-## 🔧 Tecnologías
+1. Sube el código a GitHub
+2. En Render.com: New Web Service
+3. Conecta tu repo
+4. Render detecta automáticamente el `render.yaml`
+5. ¡Listo!
 
-Python 3.11, Flask, Marshmallow, Gunicorn
+## 🎯 DDD Aplicado
+
+- **Agregado:** `Envio` - Controla toda la lógica del envío
+- **Reglas de Negocio:**
+  - Peso debe ser > 0
+  - Solo se puede asignar transportista en estado PENDIENTE
+  - Historial completo de cambios de estado
+
+## 📚 Arquitectura Limpia
+
+- **Dominio:** Lógica pura, sin dependencias externas
+- **Aplicación:** Coordina casos de uso
+- **Infraestructura:** Implementa persistencia
+- **Presentación:** Expone API REST
+
+---
+
+**Simple, limpio y funcional** ✨

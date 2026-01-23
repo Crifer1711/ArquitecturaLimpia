@@ -1,4 +1,0 @@
-"""Configuración de la infraestructura"""
-from .config import Config, DevelopmentConfig, ProductionConfig, get_config
-
-__all__ = ['Config', 'DevelopmentConfig', 'ProductionConfig', 'get_config']
