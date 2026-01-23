@@ -10,10 +10,11 @@ class CrearEnvioUseCase:
     def __init__(self, repositorio: IEnvioRepository):
         self.repo = repositorio
     
-    def ejecutar(self, pedido_id: str, origen: str, destino: str, peso: float, transportista_id: str = None):
+    def ejecutar(self, pedido_id: str, origen: str, destino: str, peso: float, transportista_id: str = None, envio_id: str = None):
         # Crear entidad de dominio
         envio = Envio(pedido_id, origen, destino, peso, transportista_id)
-        envio.id = str(uuid.uuid4())
+        # Usar el ID proporcionado o generar uno nuevo
+        envio.id = envio_id if envio_id else str(uuid.uuid4())
         
         # Guardar
         return self.repo.guardar(envio)
