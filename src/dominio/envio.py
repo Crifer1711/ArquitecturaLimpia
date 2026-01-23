@@ -14,7 +14,7 @@ class EstadoEnvio(Enum):
 class Envio:
     """AGREGADO RAÍZ - Representa un envío completo"""
     
-    def __init__(self, pedido_id: str, origen: str, destino: str, peso: float):
+    def __init__(self, pedido_id: str, origen: str, destino: str, peso: float, transportista_id: str = None):
         # Validaciones de negocio
         if peso <= 0:
             raise ValueError("El peso debe ser mayor a 0")
@@ -27,10 +27,17 @@ class Envio:
         self.origen = origen
         self.destino = destino
         self.peso = peso
-        self.estado = EstadoEnvio.PENDIENTE
-        self.transportista_id = None
+        self.transportista_id = transportista_id
+        
+        # Si ya tiene transportista, inicia EN_PREPARACION
+        if transportista_id:
+            self.estado = EstadoEnvio.EN_PREPARACION
+            self.historial = [{"estado": "EN_PREPARACION", "fecha": datetime.now().isoformat()}]
+        else:
+            self.estado = EstadoEnvio.PENDIENTE
+            self.historial = [{"estado": "PENDIENTE", "fecha": datetime.now().isoformat()}]
+        
         self.fecha_creacion = datetime.now()
-        self.historial = [{"estado": "PENDIENTE", "fecha": datetime.now().isoformat()}]
     
     def asignar_transportista(self, transportista_id: str):
         """Asigna transportista y cambia a EN_PREPARACION"""

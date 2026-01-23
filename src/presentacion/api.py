@@ -46,7 +46,8 @@ def crear_envio():
             data['pedido_id'],
             data['origen'],
             data['destino'],
-            data['peso']
+            data['peso'],
+            data.get('transportista_id')  # Opcional
         )
         return jsonify(envio.to_dict()), 201
     except Exception as e:
